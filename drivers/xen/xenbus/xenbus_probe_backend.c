@@ -45,6 +45,7 @@
 #include <linux/mm.h>
 #include <linux/notifier.h>
 #include <linux/export.h>
+#include <linux/semaphore.h>
 
 #include <asm/page.h>
 #include <asm/pgtable.h>
@@ -258,12 +259,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
 static int backend_reclaim_memory(struct device *dev, void *data)
 {
 	const struct xenbus_driver *drv;
+	struct xenbus_device *xdev;
 
 	if (!dev->driver)
 		return 0;
 	drv = to_xenbus_driver(dev->driver);
-	if (drv && drv->reclaim_memory)
-		drv->reclaim_memory(to_xenbus_device(dev));
+	if (drv && drv->reclaim_memory) {
+		xdev = to_xenbus_device(dev);
+		if (down_trylock(&xdev->reclaim_sem))
+			return 0;
+		drv->reclaim_memory(xdev);
+		up(&xdev->reclaim_sem);
+	}
 	return 0;
 }
 
