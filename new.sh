@@ -13,7 +13,7 @@ export KBUILD_BUILD_USER="hzyry2046"
 clangbin=clang/bin/clang
 gcc64bin=los-4.9-64/bin/aarch64-linux-android-as
 gcc32bin=los-4.9-32/bin/arm-linux-androideabi-as
-make O=out ARCH=arm64 menuconfig
+#make O=out ARCH=arm64 menuconfig
 
 PATH="${PWD}/clang/bin:${PATH}:${PWD}/los-4.9-32/bin:${PATH}:${PWD}/los-4.9-64/bin:${PATH}" \
 make -j$(nproc --all)   O=out \
@@ -50,4 +50,4 @@ fi
 }
 
 compile
-zupload
+#zupload
