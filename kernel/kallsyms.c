@@ -656,8 +656,11 @@ static int s_show(struct seq_file *m, void *p)
 					tolower(iter->type);
 		seq_printf(m, "%px %c %s\t[%s]\n", value,
 			   type, iter->name, iter->module_name);
+	} else {
 		seq_printf(m, "%px %c %s\n", value,
 			   iter->type, iter->name);
+	}
+
 	return 0;
 }
 
