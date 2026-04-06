@@ -139,3 +139,5 @@ all.config
 /los-4.9-64/
 /AnyKernel/
 /modules/
+new.sh
+env.sh

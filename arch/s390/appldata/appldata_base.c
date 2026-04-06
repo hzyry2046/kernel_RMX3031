@@ -214,8 +214,8 @@ appldata_timer_handler(struct ctl_table *ctl, int write,
 		.procname	= ctl->procname,
 		.data		= &timer_active,
 		.maxlen		= sizeof(int),
-		.extra1		= &zero,
-		.extra2		= &one,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
 	};
 
 	rc = proc_douintvec_minmax(&ctl_entry, write, buffer, lenp, ppos);
@@ -248,7 +248,7 @@ appldata_interval_handler(struct ctl_table *ctl, int write,
 		.procname	= ctl->procname,
 		.data		= &interval,
 		.maxlen		= sizeof(int),
-		.extra1		= &one,
+		.extra1		= SYSCTL_ONE,
 	};
 
 	rc = proc_dointvec_minmax(&ctl_entry, write, buffer, lenp, ppos);
@@ -281,8 +281,8 @@ appldata_generic_handler(struct ctl_table *ctl, int write,
 	struct ctl_table ctl_entry = {
 		.data		= &active,
 		.maxlen		= sizeof(int),
-		.extra1		= &zero,
-		.extra2		= &one,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
 	};
 
 	found = 0;

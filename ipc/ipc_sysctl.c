@@ -96,9 +96,6 @@ static int proc_ipc_auto_msgmni(struct ctl_table *table, int write,
 #define proc_ipc_auto_msgmni	   NULL
 #endif
 
-static int zero;
-static int one = 1;
-static int int_max = INT_MAX;
 
 static struct ctl_table ipc_kern_table[] = {
 	{
@@ -128,8 +125,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.shm_rmid_forced),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax_orphans,
-		.extra1		= &zero,
-		.extra2		= &one,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
 	},
 	{
 		.procname	= "msgmax",
@@ -137,8 +134,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.msg_ctlmax),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 	{
 		.procname	= "msgmni",
@@ -146,8 +143,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.msg_ctlmni),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 	{
 		.procname	= "auto_msgmni",
@@ -155,8 +152,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(int),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_auto_msgmni,
-		.extra1		= &zero,
-		.extra2		= &one,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_ONE,
 	},
 	{
 		.procname	=  "msgmnb",
@@ -164,8 +161,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.msg_ctlmnb),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 	{
 		.procname	= "sem",
@@ -181,8 +178,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.ids[IPC_SEM_IDS].next_id),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 	{
 		.procname	= "msg_next_id",
@@ -190,8 +187,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.ids[IPC_MSG_IDS].next_id),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 	{
 		.procname	= "shm_next_id",
@@ -199,8 +196,8 @@ static struct ctl_table ipc_kern_table[] = {
 		.maxlen		= sizeof(init_ipc_ns.ids[IPC_SHM_IDS].next_id),
 		.mode		= 0644,
 		.proc_handler	= proc_ipc_dointvec_minmax,
-		.extra1		= &zero,
-		.extra2		= &int_max,
+		.extra1		= SYSCTL_ZERO,
+		.extra2		= SYSCTL_INT_MAX,
 	},
 #endif
 	{}
