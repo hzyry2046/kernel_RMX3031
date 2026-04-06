@@ -67,10 +67,10 @@ static enum hrtimer_restart vol_down_timer_func(struct hrtimer *timer);
 
 static irqreturn_t kpd_volumeup_irq_handler(int irq, void *dev_id);
 static void kpd_volumeup_task_process(unsigned long data);
-static DECLARE_TASKLET(kpd_volumekey_up_tasklet, kpd_volumeup_task_process, 0);
+static DECLARE_TASKLET_OLD(kpd_volumekey_up_tasklet, kpd_volumeup_task_process);
 static irqreturn_t kpd_volumedown_irq_handler(int irq, void *dev_id);
 static void kpd_volumedown_task_process(unsigned long data);
-static DECLARE_TASKLET(kpd_volumekey_down_tasklet, kpd_volumedown_task_process, 0);
+static DECLARE_TASKLET_OLD(kpd_volumekey_down_tasklet, kpd_volumedown_task_process);
 
 static int aee_kpd_enable = 0;
 static void kpd_aee_handler(u32 keycode, u16 pressed);
@@ -256,7 +256,7 @@ struct keypad_dts_data kpd_dts_data;
 
 /* for keymap handling */
 static void kpd_keymap_handler(unsigned long data);
-static DECLARE_TASKLET(kpd_keymap_tasklet, kpd_keymap_handler, 0);
+static DECLARE_TASKLET_OLD(kpd_keymap_tasklet, kpd_keymap_handler);
 
 static void kpd_memory_setting(void);
 static int kpd_pdrv_probe(struct platform_device *pdev);
