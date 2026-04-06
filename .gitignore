@@ -141,3 +141,4 @@ all.config
 /modules/
 new.sh
 env.sh
+error-checking
