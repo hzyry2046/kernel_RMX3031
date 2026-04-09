@@ -53,6 +53,20 @@ struct serial_private {
 	int			line[0];
 };
 
+#define PCI_DEVICE_ID_HPE_PCI_SERIAL	0x37e
+
+static const struct pci_device_id pci_use_msi[] = {
+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_NETMOS, PCI_DEVICE_ID_NETMOS_9900,
+			 0xA000, 0x1000) },
+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_NETMOS, PCI_DEVICE_ID_NETMOS_9912,
+			 0xA000, 0x1000) },
+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_NETMOS, PCI_DEVICE_ID_NETMOS_9922,
+			 0xA000, 0x1000) },
+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_HP_3PAR, PCI_DEVICE_ID_HPE_PCI_SERIAL,
+			 PCI_ANY_ID, PCI_ANY_ID) },
+	{ }
+};
+
 static int pci_default_setup(struct serial_private*,
 	  const struct pciserial_board*, struct uart_8250_port *, int);
 
@@ -1763,6 +1777,16 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
 		.subvendor	= PCI_ANY_ID,
 		.subdevice	= PCI_ANY_ID,
 		.init		= pci_hp_diva_init,
+		.setup		= pci_hp_diva_setup,
+	},
+	/*
+	 * HPE PCI serial device
+	 */
+	{
+		.vendor         = PCI_VENDOR_ID_HP_3PAR,
+		.device         = PCI_DEVICE_ID_HPE_PCI_SERIAL,
+		.subvendor      = PCI_ANY_ID,
+		.subdevice      = PCI_ANY_ID,
 		.setup		= pci_hp_diva_setup,
 	},
 	/*
@@ -3620,7 +3644,22 @@ pciserial_init_ports(struct pci_dev *dev, const struct pciserial_board *board)
 	memset(&uart, 0, sizeof(uart));
 	uart.port.flags = UPF_SKIP_TEST | UPF_BOOT_AUTOCONF | UPF_SHARE_IRQ;
 	uart.port.uartclk = board->base_baud * 16;
-	uart.port.irq = get_pci_irq(dev, board);
+
+	if (pci_match_id(pci_use_msi, dev)) {
+		dev_dbg(&dev->dev, "Using MSI(-X) interrupts\n");
+		pci_set_master(dev);
+		rc = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_ALL_TYPES);
+	} else {
+		dev_dbg(&dev->dev, "Using legacy interrupts\n");
+		rc = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_LEGACY);
+	}
+	if (rc < 0) {
+		kfree(priv);
+		priv = ERR_PTR(rc);
+		goto err_deinit;
+	}
+
+	uart.port.irq = pci_irq_vector(dev, 0);
 	uart.port.dev = &dev->dev;
 
 	for (i = 0; i < nr_ports; i++) {
@@ -4626,6 +4665,10 @@ static const struct pci_device_id serial_pci_tbl[] = {
 	{	PCI_VENDOR_ID_HP, PCI_DEVICE_ID_HP_DIVA_AUX,
 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
 		pbn_b2_1_115200 },
+	/* HPE PCI serial device */
+	{	PCI_VENDOR_ID_HP_3PAR, PCI_DEVICE_ID_HPE_PCI_SERIAL,
+		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+		pbn_b1_1_115200 },
 
 	{	PCI_VENDOR_ID_DCI, PCI_DEVICE_ID_DCI_PCCOM2,
 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
