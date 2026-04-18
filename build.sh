@@ -35,7 +35,7 @@ echo Trying to restart script
 fi
 fi
 
-make O=out ARCH=arm64 nethunter_defconfig
+make O=out ARCH=arm64 nethunter_defconfig droidspaces.config droidspaces-additional.config
 
 PATH="${PWD}/clang/bin:${PATH}:${PWD}/los-4.9-32/bin:${PATH}:${PWD}/los-4.9-64/bin:${PATH}" \
 make -j$(nproc --all)   O=out \
